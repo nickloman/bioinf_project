@@ -1,3 +1,3 @@
 virtualenv venv
-sourve venv/bin/activate
-pip -r venv_reqs.txt
+source venv/bin/activate
+pip install -r venv_reqs.txt
