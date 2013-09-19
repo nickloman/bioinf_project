@@ -1,0 +1,7 @@
+#!/bin/bash
+ref=$1
+tag=$2
+f1=$3
+f2=$4
+bwa bwasw $ref $f1 $f2 | samtools view -uS - | samtools sort - $tag.sorted
+samtools index $tag.sorted.bam

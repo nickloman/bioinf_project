@@ -1,0 +1,8 @@
+[vcf.filters]
+site_quality = vcf.filters:SiteQuality
+dps = vcf.filters:DepthPerSample
+avg-dps = vcf.filters:AvgDepthPerSample
+eb = vcf.filters:ErrorBiasFilter
+snp-only = vcf.filters:SnpOnly
+vgq = vcf.filters:VariantGenotypeQuality
+
