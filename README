@@ -1,3 +1,4 @@
+cat metadata.txt | parallel --colsep '\t' --header : echo ./tax.sh {Participant}-{Method}-{Extraction} /mnt/phatso/alnQC/plate9/Kostas/{Sample}_1_trimmed.fastq.gz /mnt/phatso/alnQC/plate9/Kostas/{Sample}_2_trimmed.fastq.gz
 
 A basic template for a new bioinformatics analysis.
 

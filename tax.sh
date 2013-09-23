@@ -4,18 +4,21 @@ f1=$2
 f2=$3
 olddir=`pwd`
 bwa mem -t16 refs/hs_ref_GRCh37_p10 $f1 $f2 | tee >(samtools view -h -f 4 -S - -o "$tag".sam) | samtools view -F 4 -S - | wc -l > "$tag".wc
-python sam2fasta.py $tag.sam > "$tag".fasta
-bin/last-291/src/lastal -F15 ~/hackathon/microbial.last "$tag".fasta | bin/last-291/scripts/maf-sort.sh -n2 - > "$tag".sorted.maf
-bin/last-291/scripts/maf-convert.py blast "$tag".sorted.maf > "$tag".blast
+python scripts/sam2fasta.py $tag.sam > "$tag".fasta
+lastal -F15 refs/microbial.last "$tag".fasta | maf-sort.sh -n2 - > "$tag".sorted.maf
+maf-convert.py blast "$tag".sorted.maf > "$tag".blast
+rm "$tag".sorted.maf
 
 #~/hackathon/bin/metaphlan-1.7.6/metaphlan.py "$tag".fasta --bowtie2db ~/hackathon/bin/metaphlan-1.7.6/mpa > "$tag".assign.txt
 
-python sleepcat.py xvfb-run -a ~/hackathon/bin/megan/MEGAN +g false -E -fg '/home/nick/hackathon/gi_taxid_prot.bin' <<EOF
+python scripts/sleepcat.py xvfb-run -a ~/hackathon/bin/megan/MEGAN +g false -E -fg '/home/nick/hackathon/gi_taxid_prot.bin' <<EOF
 import blastFile=$tag.blast fastaFile=$tag.fasta meganFile=$tag.rma maxMatches=100 minScore=250.0 topPercent=10.0 minSupport=2 minComplexity=0.5 useseed=false usekegg=false paired=true suffix1='/1' suffix2='/2' useidentityfilter=false blastformat=BlastX
 close
 EOF
 
-python sleepcat.py xvfb-run -a ~/hackathon/bin/megan/MEGAN +g false -E -fg '/home/nick/hackathon/gi_taxid_prot.bin' -f $tag.rma <<EOF
+gzip -f "$tag".blast
+
+python scripts/sleepcat.py xvfb-run -a ~/hackathon/bin/megan/MEGAN +g false -E -fg '/home/nick/hackathon/gi_taxid_prot.bin' -f $tag.rma <<EOF
 select nodes=all
 uncollapse subtrees
 collapse rank=Species
